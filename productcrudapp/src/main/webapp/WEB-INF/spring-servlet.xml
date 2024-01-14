@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+         http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+               
+         <tx:annotation-driven/>
+         
+       <context:component-scan base-package="productcrudapp"></context:component-scan>
+        
+        <mvc:annotation-driven></mvc:annotation-driven>
+       
+       
+  
+       
+       
+       
+ <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" name="viewResolver">
+	 <property name="prefix" value="WEB-INF/views/"></property>
+	 <property name="suffix" value=".jsp"></property>
+ </bean>
+
+<!-- DATASOURCE -->
+
+	<!-- (ds is an object of this class which is pass into factory bean ) --> 
+
+ <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="ds">  
+    <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/productcrud" />
+    <property name="username" value="prakash" />
+    <property name="password" value="pass" />
+</bean>
+ 
+ 
+ <!-- LOCALSESSIONBEAN -->
+
+<!--      factory IS USE AS OBJECT WHICH IS PASS TO HYBERNATE TEMPLATE -->
+
+ <bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="factory" >
+     <!-- data source -->
+    
+    <property name="dataSource" ref="ds"/>
+    
+    
+    <!-- HYBERNATES PROPERTIES -->
+    
+    <property name="hibernateProperties">
+		 <props>
+		 
+		 <!-- USE MYSQLDIALECT AS PER SYSTEM DATABASE INSTALLED -->
+		 
+		    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop> 
+		    
+		   <!--  SHOW_SQL USE FOR SHOW SQLQUEUERIES =TRUE   -->
+		    <prop key="hibernate.show_sql">true</prop> 
+		    
+		 <!-- hibernate.hbm2ddl.auto">update USE FOR ,,
+		 JO PEHELE SE BNA HOGA USSI KO UPDATE KR DEGA AGR NHI
+		  HAI TO BNA DEGA AUR FR UPDATE KRETE RHEGA USSI KO -->
+		    <prop key="hibernate.hbm2ddl.auto">update</prop>
+		    
+		  </props>
+     </property>
+     
+     <!-- ANNOTATED CLASSES  -->
+     <property name="annotatedClasses">
+     
+   <!--   KITINI ENTITY HAI USKI LIST  --> 
+     
+      <list>
+        
+        <value>productcrudapp.model.Product</value>
+         
+      </list>
+    </property>
+ 
+ 
+ 
+ 
+  	</bean>
+
+ <!--  VERY IMPORTANT TO CREATE HYBERNATE TEMPLATE  -->
+
+
+		<!-- 	it is class which (name="hibernateTemplate") IS USE TO PERFORM THE DATA  -->
+
+	<bean class="org.springframework.orm.hibernate5.HibernateTemplate" name="hibernateTemplate">
+ 	
+ 	<property name="sessionFactory" ref="factory"></property>
+ 	
+	 </bean>
+	 
+	 
+ 
+<!-- 		 WE MOSTLY USE TRANSACTIONMANAGER TO WRITE INTO THE DATABSE.... -->
+ 
+ 	<bean class="org.springframework.orm.hibernate5.HibernateTransactionManager" name="transactionManager">
+ 	
+ 	<property name="sessionFactory" ref="factory"></property>  
+ 	
+ 	</bean>
+ 
+
+</beans> 
