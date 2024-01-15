@@ -34,7 +34,7 @@ public class MainController {
 	public String addProduct(Model model) {
 		model.addAttribute("title","ADD PRODUCT");
 		return "add_product_form";
-	}
+	}  
 	
 	@RequestMapping(value ="handle-product",method = RequestMethod.POST)
 	
@@ -55,4 +55,19 @@ public class MainController {
 		redirectview.setUrl(request.getContextPath()+"/");
 		return redirectview	;
 	}
+	
+	@RequestMapping("/update/{productId}")
+	//update  
+	
+	
+	
+	public String updateForm( @PathVariable("productId") int pid ,Model model  ) {
+		
+		 Product product=this.productDao.getProduct(pid); 
+			 model.addAttribute("product", product); 
+		 
+		
+		return "update_form";
+	}
+	
 }
